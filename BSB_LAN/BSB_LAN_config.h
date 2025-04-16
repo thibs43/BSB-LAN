@@ -47,7 +47,7 @@ char mDNS_hostname[32] = "BSBLAN";     // Advertises the hostname in the local n
  * Use pool.ntp.org if your BSB-LAN installation can access the internet.
  * Otherwise you may also use your router's address if it can act as a NTP server.
  * The default timezone "CET-1CEST,M3.5.0,M10.5.0/3" covers most Central European countries (GMT+1) and takes care of daylight saving.
- * Use "EET-2EEST,M3.5.0/3,M10.5.0/4" for Eastern European countries (GMT+2), or 
+ * Use "EET-2EEST,M3.5.0/3,M10.5.0/4" for Eastern European countries (GMT+2), or
  * use "WET0WEST,M3.5.0/1,M10.5.0" for Western European countries (GMT+0).
  * See here for a full list of timezones for places all over the world:
  * https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
@@ -160,9 +160,9 @@ parameter log_parameters[40] = {
 };
 
 // Compile MQTT extension: activate sending log_parameters to MQTT broker every log_interval seconds
-char mqtt_broker_addr[33] = "192.168.178.20:1883";    // MQTT broker. Adjust LoggingMode to activate. Can be IP address or hostname. Optional port can be specified after trailing colon. If omitted, port defaults to 1883.
-char MQTTUsername[65] = "User";                 // Set username for MQTT broker here or set empty string if no username/password is used.
-char MQTTPassword[65] = "Pass";                 // Set password for MQTT broker here or set empty string if no password is used.
+char mqtt_broker_addr[33] = "192.168.1.100:1883";    // MQTT broker. Adjust LoggingMode to activate. Can be IP address or hostname. Optional port can be specified after trailing colon. If omitted, port defaults to 1883.
+char MQTTUsername[65] = "bsblan";                 // Set username for MQTT broker here or set empty string if no username/password is used.
+char MQTTPassword[65] = "E9M6tA8vV8BSv5cLwSq7";                 // Set password for MQTT broker here or set empty string if no password is used.
 char MQTTTopicPrefix[65] = "BSB-LAN"; 	        // Mandatory: Choose the "topic" for MQTT messages here.
 byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
@@ -181,6 +181,9 @@ parameter avg_parameters[40] = {
   {8700, -1},                         // Außentemperatur
   {8326, -1}                          // Brenner-Modulation
 };
+
+// In parameters with numerical values, this setting defines the value for a deactivated/inactive status. Defaults to "---", Home Assistant requires "None", other systems might require "0" to function properly.
+char replaceDisabled[10] = "---";
 
 // Define the pin for one wire temperature sensors. -1 = disable oneWire bus.
 int8_t One_Wire_Pin = -1;
@@ -227,7 +230,7 @@ parameter ipwe_parameters[40] = {
 // (*) In case you're using an ESP32's internal memory instead of an SD card, use
 // https://github.com/lorol/arduino-esp32littlefs-plugin to upload the files.
 // For local use of these libraries to work, enabling webserver functionality is also required!
-//#define D3_LIBRARY_PATH "/d3.js"c:\Users\thibs\Downloads\BSB_LAN_custom_defs.h
+//#define D3_LIBRARY_PATH "/d3.js"
 //#define C3_LIBRARY_PATH "/c3.js"
 
 bool enable_max_cul = false;                // enable or disable connection to CUNO/CUNX/modified MAX!Cube;
@@ -236,9 +239,6 @@ char max_device_list[20][11] = {               // list of MAX! wall/heating ther
   "KEQ0502326",                                // use MAX! serial numbers here which have to have exactly 10 characters
   "KEQ0505080"
 };
-
-// include commands from BSB_lan_custom.h to be executed at the end of each main loop
-//#define CUSTOM_COMMANDS
 
 /*
  * Check for new versions when accessing BSB-LAN's main page.
@@ -251,7 +251,7 @@ char max_device_list[20][11] = {               // list of MAX! wall/heating ther
 */
 bool enable_version_check = false;
 
-// Enable ESP32 over-the-air updates. 
+// Enable ESP32 over-the-air updates.
 // Pro: You don't need to physically connect your PC to the ESP32 in order to update BSB-LAN.
 // Contra: Someone who has access to your network and finds out about BSB-LAN's username and password can install their own software on the ESP32.
 bool enable_ota_update = false;
@@ -268,7 +268,7 @@ byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to se
 byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface. Set to 2 only if you are asked by the developers as the extensive output will significantly slow down the microcontroller.
 bool show_unknown = true; // true - show all parameters, false - hide unknown parameters from web display (parameters will still be queried and therefore take time!)
 
-#define CONFIG_VERSION 39
+#define CONFIG_VERSION 41
 
 /************************************************************************************/
 /************************************************************************************/
